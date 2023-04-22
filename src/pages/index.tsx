@@ -1,8 +1,5 @@
-import { type NextPage } from "next";
 import Head from "next/head";
 import { Dispatch, useState } from "react"
-
-import { api } from "~/utils/api";
 
 type THightlight = "correct" | "wrong" | "current" | "normal";
 
@@ -45,9 +42,7 @@ function Word(props: WordPropsType) {
   </>
 }
 
-
-const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+export default function App() {
   let sentence: string = "A bird in the hand is worth two in the bush.";
   const words = sentence.split(" ");
   const tempHighlight: Array<THightlight> = words.map((_, index) => {
@@ -64,8 +59,7 @@ const Home: NextPage = () => {
     if (e.key === " ") {
       checkHighlights(words, answer, highlights, setHighlights);
     }
-    console.log(answer.split(" ").length, words.length)
-    if (answer.split(" ").length === words.length) {
+    if (answer.split(" ").length === words.length + 1) {
       alert("Finished")
     }
   }
@@ -85,10 +79,7 @@ const Home: NextPage = () => {
         <div className="flex">
           <div className="grow mx-2">
             {words.map((word, index) => {
-              const highlight = highlights[index];
-              if (highlight === undefined)
-                return <span>Error</span>
-              return <Word word={word} key={index} highlight={highlight} />
+              return <Word word={word} key={index} highlight={highlights[index]} />
             })}
           </div>
         </div>
@@ -103,6 +94,4 @@ const Home: NextPage = () => {
     </>
 
   )
-};
-
-export default Home;
+} 
