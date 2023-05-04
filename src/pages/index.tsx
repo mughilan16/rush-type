@@ -1,15 +1,13 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Dispatch, useRef, useState } from "react"
+import { Dispatch, useState } from "react"
 
 type THightlight = "correct" | "wrong" | "current" | "normal";
 
 interface WordPropsType {
   word: string
   highlight: THightlight
-}
-
-function checkHighlights(
+} function checkHighlights(
   words: Array<string>,
   answer: string,
   hightlights: Array<THightlight>,
@@ -29,19 +27,29 @@ function checkHighlights(
 }
 
 function Word(props: WordPropsType) {
-  let background: string;
+  let style: any
   if (props.highlight === "correct")
-    background = "#31C48D"
+    style = {
+      color: "gray",
+      border: "1px solid transparent"
+    }
   else if (props.highlight === "wrong")
-    background = "#F98080"
+    style = {
+      color: "red",
+      border: "1px solid transparent"
+    }
   else if (props.highlight === "current")
-    background = "#FCE96A"
+    style = {
+      textDecoration: "underline",
+      border: "1px solid black"
+    }
   else
-    background = "transparent"
+    style = {
+      color: "black",
+      border: "1px solid transparent"
+    }
 
-  const spanStyle = {
-    backgroundColor: background
-  }
+  const spanStyle = { ...style, border: "1px" };
   return <>
     <span style={spanStyle}>{props.word}</span>
   </>
@@ -52,15 +60,17 @@ export default function App() {
   const letters = sentence.split("");
   const router = useRouter();
   const tempHighlight: Array<THightlight> = letters.map((_, index) => {
-    if (index === 0)
-      return "current"
+    if (index === 0) return "current"
     return "normal"
   })
   const [highlights, setHighlights] = useState(tempHighlight);
   const [answer, setAnswer] = useState("");
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => { setAnswer(e.target.value) }
-  function spaceDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAnswer(e.target.value);
+    console.log(answer);
     checkHighlights(letters, answer, highlights, setHighlights);
+  }
+  function spaceDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === " ") {
       if (letters.length === answer.split("").length) {
         router.push("/result")
